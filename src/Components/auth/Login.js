@@ -1,91 +1,66 @@
-import React from "react";
+import React, { useState } from "react";
+import api from "../../Utils/Api";
+import LoadingSpinnerButton from "../LoadingSpinnerButton";
+import { useNavigate } from "react-router-dom";
 
-async function authenticate(email, password) {
-  const user = {
-    email: email,
-    password: password,
-  };
 
-  return fetch(process.env.REACT_APP_DBHOST_USERS + "/authenticate" , {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      Accept: "*/*",
-    },
-    body: JSON.stringify(user),
-  }).then((data) => data.json());
-}
+
+
 
 export default function Login() {
-  const [email, setEmail] = React.useState();
-  const [password, setPassword] = React.useState();
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log("Authentification starting")
-    await authenticate(email, password).then((value) => {
-      if(value === null || value=== undefined)
-        alert("Return value can't be read")
-      else if (!value.isSuccess) {
-        alert(value.errorMessage);
-      }
-      else if (value.result === undefined) {
-        alert("result is undifiend",);
-      }
-      else{
-        localStorage.setItem(
-          "user",
-          JSON.stringify({ user: value.result })
-        );
-        window.location.href = "/"
-      }
-    }).catch(function() {
-      alert("Failed to fetch api");
-  });;
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [formError, setFormError] = useState(null);
+  const [loading, setLoading] =  useState(false)
+  let navigate = useNavigate();
+  const handleSubmit = async () => { 
+    setLoading(true)
+    let result = await api.login({Email : email, Password : password});
+    if(result.failure)
+      setFormError("Erreur lors de l'appel de l'api")
+    setLoading(false)
+    if(!result.failure){
+      localStorage.setItem("user" , JSON.stringify({
+        username : "qzdqz",
+        token : "qzdzqdqz",
+        id : "qzdqz"
+      }))
+      navigate("/");
+    }      
   };
 
-  const handleCreateAccount = async (e) => {
-    e.preventDefault();
-    window.location.href = "/CreateAccount";
-  };
+  
   return (
     <div id="login-form-wrap">
-      <h2> Login </h2>{" "}
-      <form id="login-form" onSubmit={handleSubmit}>
-        <p>
+      <h2> Login </h2>
+      <form id="login-form">
           <input
             type="text"
             id="email"
             onChange={(e) => setEmail(e.target.value)}
             name="email"
             placeholder="email"
+            value={email}
             required
           />
-        </p>{" "}
-        <p>
           <input
             type="password"
             id="password"
             onChange={(e) => setPassword(e.target.value)}
             name="password"
             placeholder="password"
+            value={password}
             required
-          />
-        </p>{" "}
-        <p>
-          <input type="submit" id="login" value="Login" />
-        </p>{" "}
-      </form>{" "}
-      <div id="create-account-wrap">
-        <p>
-          {" "}
-          Not a member ?{" "}
-          <a href="/create" onClick={handleCreateAccount}>
-            {" "}
-            Create Account{" "}
+          />   
+          {!loading ? <button type="button" onClick={() => handleSubmit()}>Connexion</button>  : <LoadingSpinnerButton></LoadingSpinnerButton>}
+      </form>
+      {formError === null?? <p style={{color:"red"}}>{formError}</p>}
+      <div id="create-account-wrap">  
+          Not a member ?
+          <a href="/createAccount">    
+            Create Account
           </a>
-        </p>
-      </div>{" "}
+      </div>
     </div>
   );
 }
