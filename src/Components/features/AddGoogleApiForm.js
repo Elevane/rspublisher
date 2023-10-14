@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import LoadingSpinnerButton from "./LoadingSpinnerButton";
+import LoadingSpinnerButton from "../UI/LoadingSpinnerButton";
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
-import api from "../Utils/Api"
-
+import api from "../../Utils/Api"
+import {userState} from "../../state/user"
+import { useRecoilState } from "recoil";
 
 export default function AddGoogleApiForm({ loading, setLoading}) {
-const [GoogleAdded, setGoogleAdded] = useState(false)
+const [googleAdded, setGoogleAdded] = useRecoilState(userState)
+
   const SaveApiKey = async (key) => {
     setLoading(true);
     let result = await api.saveGoogleSecrets({ApiKey : key});
@@ -21,20 +23,19 @@ const [GoogleAdded, setGoogleAdded] = useState(false)
   return (
     <GoogleOAuthProvider clientId="108775869780-nevv54odcguhku7ipi8g0rhck7s9qevr.apps.googleusercontent.com">   
       {!loading ? (
-        <>
+        <div style={{"display" : "flex", "width" : "300px", "justifyContent" : "spaceBetween"}}>
         <GoogleLogin
         onClick={() => setLoading(true)}
           onSuccess={(credentialResponse) => {
-            //console.log(credentialResponse);
-            //console.log(jwtDecode(credentialResponse.credential))
+            
             SaveApiKey()
           }}
           onError={() => {
             console.log("Login Failed");
           }}
         />
-         {GoogleAdded === true? <p style={{"color" : "green"}}>V</p> : <p style={{"color" : "red"}}>X</p>}
-        </>
+         {googleAdded === true? <p style={{"color" : "green"}}>V</p> : <p style={{"color" : "red"}}>X</p>}
+        </div>
       ) : (
         <button disabled>
           <LoadingSpinnerButton></LoadingSpinnerButton>

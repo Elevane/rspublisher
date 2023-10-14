@@ -11,18 +11,20 @@ const request = async (method, route, content) => {
     if(content !== null)
         options["body"] = JSON.stringify(content)
 
-  return fetch(route, options)
+  return await fetch(route, options)
     .then((data) => {
         if (data.headers.get('content-length') === '0')
         return { result: [], failure: false, errorMessage: null };
-        else if (data.status === 200 && data.body !== null)
-        return { result: data.json(), failure: false, errorMessage: null };
-      else
+        else if(data.status !== 200)
         return {
           result: null,
           failure: true,
           errorMessage: ```${data.status} : test```,
         };
+        return data.json()
+    }).then((value)=>
+    {
+        return { result: value, failure: false, errorMessage: null };
     })
     .catch((e, a, b) => {
       return {

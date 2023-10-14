@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import api from "../../Utils/Api";
 import { useNavigate } from "react-router-dom";
-import LoadingSpinnerButton
-
-from "../LoadingSpinnerButton";
+import LoadingSpinnerButton from "../UI/LoadingSpinnerButton";
 export default function CreateAccount() {
   const [loading, setLoading] = useState(false)
   const [email, setEmail] = React.useState();

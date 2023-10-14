@@ -1,17 +1,15 @@
 import {  useLocation , Navigate} from "react-router-dom";
 import React from "react";
-import useLocalStorage from "./Hooks/useLocalStorage";
-
-
+import userLocalStorage from "../../Utils/Hooks/useLocalStorage";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { authState } from "../../state/auth"
 
 
 export default function RequireAuth({ children}) {
-    const user = useLocalStorage.GetUser();
+    const userState = useRecoilValue(authState)
     let location = useLocation();
-    if(user === false) {
-        localStorage.clear();
+    if(!userState.isAuthenticated) {
         return <Navigate to="/login" state={{ from: location}} replace />
     }
-
     return children;
 }

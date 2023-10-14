@@ -1,7 +1,7 @@
-import LoadingSpinnerButton from "./LoadingSpinnerButton"
+import LoadingSpinnerButton from "../UI/LoadingSpinnerButton"
 
 
-export default function PublishContetButton({loading, setLoading}){
+export default function PublishContentButton({loading, setLoading}){
     
 const PublishContent = () => {
     setLoading(true)   

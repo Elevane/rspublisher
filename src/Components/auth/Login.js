@@ -1,30 +1,29 @@
 import React, { useState } from "react";
 import api from "../../Utils/Api";
-import LoadingSpinnerButton from "../LoadingSpinnerButton";
+import LoadingSpinnerButton from "../UI/LoadingSpinnerButton";
 import { useNavigate } from "react-router-dom";
-
-
-
-
+import { authState } from "../../state/auth"
+import { useRecoilState } from "recoil";
+import {loadingState} from "../../state/loading"
 
 export default function Login() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const [formError, setFormError] = useState(null);
-  const [loading, setLoading] =  useState(false)
+  const [loading, setLoading] =  useRecoilState(loadingState)
+  const [auth, setAuth] = useRecoilState(authState)
   let navigate = useNavigate();
+
+
+
   const handleSubmit = async () => { 
     setLoading(true)
     let result = await api.login({Email : email, Password : password});
     if(result.failure)
-      setFormError("Erreur lors de l'appel de l'api")
+      console.log("Erreur lors de l'appel de l'api")
     setLoading(false)
+    console.log(result.result)
     if(!result.failure){
-      localStorage.setItem("user" , JSON.stringify({
-        username : "qzdqz",
-        token : "qzdzqdqz",
-        id : "qzdqz"
-      }))
+      setAuth({isAuthenticated : true, username : result.result.email})
       navigate("/");
     }      
   };
@@ -54,7 +53,6 @@ export default function Login() {
           />   
           {!loading ? <button type="button" onClick={() => handleSubmit()}>Connexion</button>  : <LoadingSpinnerButton></LoadingSpinnerButton>}
       </form>
-      {formError === null?? <p style={{color:"red"}}>{formError}</p>}
       <div id="create-account-wrap">  
           Not a member ?
           <a href="/createAccount">    
