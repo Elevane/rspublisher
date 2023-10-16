@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import api from "../../Utils/Api";
 import LoadingSpinnerButton from "../UI/LoadingSpinnerButton";
 import { useNavigate } from "react-router-dom";
@@ -10,7 +10,7 @@ export default function Login() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [loading, setLoading] =  useRecoilState(loadingState)
-  const [auth, setAuth] = useRecoilState(authState)
+  const [, setAuth] = useRecoilState(authState)
   let navigate = useNavigate();
 
 
