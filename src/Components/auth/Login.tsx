@@ -1,10 +1,13 @@
 import React from "react";
 import api from "../../Utils/Api";
-import LoadingSpinnerButton from "../UI/LoadingSpinnerButton";
+
 import { useNavigate } from "react-router-dom";
-import { authState } from "../../state/auth"
+
 import { useRecoilState } from "recoil";
-import {loadingState} from "../../state/loading"
+import { loadingState } from "../../state/loading";
+import { authState } from "../../state/auth";
+import LoadingSpinnerButton from "../UI/LoadingSpinnerButton";
+
 
 export default function Login() {
   const [email, setEmail] = React.useState("");
@@ -17,11 +20,10 @@ export default function Login() {
 
   const handleSubmit = async () => { 
     setLoading(true)
-    let result = await api.login({Email : email, Password : password});
+    let result = await api.login({"email" : email, "password" : password});
     if(result.failure)
       console.log("Erreur lors de l'appel de l'api")
     setLoading(false)
-    console.log(result.result)
     if(!result.failure){
       setAuth({isAuthenticated : true, username : result.result.email})
       navigate("/");
@@ -51,7 +53,7 @@ export default function Login() {
             value={password}
             required
           />   
-          {!loading ? <button type="button" onClick={() => handleSubmit()}>Connexion</button>  : <LoadingSpinnerButton></LoadingSpinnerButton>}
+          {!loading ? <button type="button" onClick={() => handleSubmit()}>Connexion</button>  : <LoadingSpinnerButton />}
       </form>
       <div id="create-account-wrap">  
           Not a member ?

@@ -2,20 +2,22 @@
 import React from "react";
 import AddGoogleApiForm from "./features/AddGoogleApiForm";
 import PublishContentButton from "./features/PublishContentButton";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { loadingState } from "../state/loading";
+import {  useRecoilValue } from "recoil";
+import { AppUser } from "../models/AppModels";
 import { authState } from "../state/auth";
 
 
 
 export default function Home(){
-    const user = useRecoilValue(authState)
-    const [loading, setLoading] =  useRecoilState(loadingState)
+    
+    const user: AppUser = useRecoilValue(authState)
+    
+
     return(
         <div>
         <h1>welcome <strong style={{color:"red"}}>{ user.username }</strong></h1>
-        <AddGoogleApiForm loading={loading} setLoading={setLoading} ></AddGoogleApiForm>
-        <PublishContentButton loading={loading} setLoading={setLoading}></PublishContentButton>
+        <AddGoogleApiForm></AddGoogleApiForm>
+        <PublishContentButton></PublishContentButton>
         <div><a href="/logout">logout</a></div>
         </div>
         );

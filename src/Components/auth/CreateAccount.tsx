@@ -1,20 +1,22 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import api from "../../Utils/Api";
 import { useNavigate } from "react-router-dom";
 import LoadingSpinnerButton from "../UI/LoadingSpinnerButton";
+
+
 export default function CreateAccount() {
   const [loading, setLoading] = useState(false)
-  const [email, setEmail] = React.useState();
-  const [password, setPassword] = React.useState();
-  const [username, setUserName] = React.useState();
-  const [formError, setFormError] = useState(null)
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [formError, setFormError] = useState<string>('d')
   let navigate = useNavigate();
-  const handleSubmit = async () => {
+
+
+  const handleSubmit = async () => { 
     setLoading(true);
     let result = await api.register({
-      Email: email,
-      Password: password,
-      username: username,
+      email: email,
+      password: password
     });
     if (result.failure) setFormError("Erreur lors de l'appel de l'api");
     setLoading(false);
@@ -38,17 +40,9 @@ export default function CreateAccount() {
         <input
           type="text"
           id="email"
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e : ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
           name="email"
           placeholder="Email"
-          required
-        />
-        <input
-          type="text"
-          id="username"
-          onChange={(e) => setUserName(e.target.value)}
-          name="username"
-          placeholder="username"
           required
         />
         <input
@@ -67,7 +61,7 @@ export default function CreateAccount() {
           <LoadingSpinnerButton></LoadingSpinnerButton>
         )}
       </form>
-      {formError === null?? <p style={{color:"red"}}>{formError}</p>}
+      {formError !== '' ?? <p style={{color:"red"}}>{formError}</p>}
       <div id="create-account-wrap">
         <p>
           Already a member,

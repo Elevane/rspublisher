@@ -1,11 +1,11 @@
 import { atom } from 'recoil';
+import { AppUser } from '../models/AppModels';
 
-const authState = atom({
+const authState = atom<AppUser>({
     key: 'auth',
-    // get initial state from local storage to enable user to stay logged in
     default: {
         isAuthenticated : false,
-        username : null
+        username : ''
     }
 });
 

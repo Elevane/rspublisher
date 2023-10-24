@@ -1,8 +1,10 @@
+import { useRecoilState } from "recoil"
+import { loadingState } from "../../state/loading"
 import LoadingSpinnerButton from "../UI/LoadingSpinnerButton"
 
 
-export default function PublishContentButton({loading, setLoading}){
-    
+ const PublishContentButton : React.FC =() => {
+  const [loading, setLoading] =  useRecoilState(loadingState)
 const PublishContent = () => {
     setLoading(true)   
   return fetch("https://localhost:7167/Youtube/Publish" , {
@@ -14,14 +16,16 @@ const PublishContent = () => {
         }
       }).then((data) => {
         
-        if (!data.status  === 200)
+        if (data.status !== 200)
             alert("Erreur dans l'object de retour")
         setLoading(false)
     }); 
  }
     return (
         <form>
-         { !loading ? <button  type="button" onClick={() =>PublishContent()}>Publier</button> : <button disabled><LoadingSpinnerButton></LoadingSpinnerButton></button>}
+         { !loading ? <button  type="button" onClick={() =>PublishContent()}>Publier</button> : <button disabled><LoadingSpinnerButton /></button>}
         </form> 
     )
 }
+
+export default PublishContentButton
